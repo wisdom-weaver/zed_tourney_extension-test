@@ -1,0 +1,39 @@
+$zed-neon: #27b18a;
+
+.img-icon-cont {
+  margin: 0 auto;
+  height: 80px;
+  width: 80px;
+  img {
+    height: inherit;
+    width: inherit;
+    object-fit: contain;
+  }
+}
+
+.racing-tag-c {
+  border-radius: 4px;
+  color: #f0f8ff;
+  background-color: rgba($zed-neon, 0.6);
+  display: inline-block;
+  font-family: Montserrat-Bold;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  line-height: 2.4rem;
+  padding: 0 1rem;
+  margin: 2px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.row-flex {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.m2 {
+  margin: 2px;
+}

@@ -1,0 +1,9 @@
+{
+    "version": 3,
+    "mappings": "AAAA,OAAO,CAAC,0BAAI",
+    "sources": [
+        "options.scss"
+    ],
+    "names": [],
+    "file": "options.css"
+}

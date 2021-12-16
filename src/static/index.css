@@ -1,0 +1,49 @@
+.img-icon-cont {
+  margin: 0 auto;
+  height: 80px;
+  width: 80px;
+}
+
+.img-icon-cont img {
+  height: inherit;
+  width: inherit;
+  -o-object-fit: contain;
+     object-fit: contain;
+}
+
+.racing-tag-c {
+  border-radius: 4px;
+  color: #f0f8ff;
+  background-color: rgba(39, 177, 138, 0.6);
+  display: inline-block;
+  font-family: Montserrat-Bold;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  line-height: 2.4rem;
+  padding: 0 1rem;
+  margin: 2px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.row-flex {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.m2 {
+  margin: 2px;
+}
+/*# sourceMappingURL=index.css.map */
