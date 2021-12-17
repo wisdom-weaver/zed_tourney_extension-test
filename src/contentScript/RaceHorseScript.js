@@ -5,54 +5,65 @@ import { useQuery } from "react-query";
 import ficons from "../utils/ficons";
 import { dec, get_class_color, get_color } from "../utils/utils";
 import { QueryWrapper } from "./RQuery";
+import qs from "query-string";
 
 let horse_name_sel = "div.racehorse > div.primary-text.bold";
 
-let sn_hapi = (n) => {
-  n = encodeURI(n);
-  return `https://api.stackednaks.com/horses/${n}`;
+// const backend = "http://localhost:3001";
+const backend = "https://api.stackednaks.com";
+
+let sn_hapi = (hid, details) => {
+  let { c, f, t } = details;
+  return `${backend}/tourney/dec25/?${qs.stringify({ c, f, t, hid })}`;
 };
 
-let modes = ["cdt", "all"];
+let type_color = (type) => {
+  let c = "red";
+  if (type == "CFT") c = "green";
+  if (type == "CT") c = "orange";
+  if (type == "T") c = "blue";
+  if (type == "NA") c = "red";
+  return get_color(c);
+};
 const err_chip = (
   <p style={{ background: get_color("red") }} className="racing-tag-c">
     {"err"}
   </p>
 );
+const na_chip = (
+  <p style={{ background: get_color("red") }} className="racing-tag-c">
+    {"No Data"}
+  </p>
+);
 
-const get_chip_data = ({ details, hdata, mode }) => {
-  let { rc, fee_tag, tun } = details;
-  let stats = hdata.stats.all;
-  let { firsts, seconds, thirds, fourths, other, flames } = stats;
-  let tot = firsts + seconds + thirds + fourths + other;
-  let p1 = dec(((firsts || 0) / (tot || 1)) * 100, 0);
-  let p2 = dec(((seconds || 0) / (tot || 1)) * 100, 0);
-  let p3 = dec(((thirds || 0) / (tot || 1)) * 100, 0);
-  let pf = dec(((flames || 0) / (tot || 1)) * 100, 1);
-  return { p1, p2, p3, tot, pf };
-};
-
-const get_chip_jsx = (chipd) => {
+const get_chip_jsx = (d) => {
   return (
     <>
       {ficons.trophy}
-      <span className="m2">{chipd.p1}%</span>/
-      <span className="m2">{chipd.p2}%</span>/
-      <span className="m2">{chipd.p3}%</span>
+      <span className="m2">{dec(d?.p1, 0)}</span>/
+      <span className="m2">{dec(d?.p2, 0)}</span>/
+      <span className="m2">{dec(d?.p3, 0)}</span>
       {ficons.flag}
-      <span className="m2">#{chipd.tot}</span>
+      <span className="m2">{d?.n}</span>
       {ficons.flame}
-      <span className="m2">{chipd.pf}%</span>
+      <span className="m2">{dec(d?.fires_per, 0)}%</span>
+      {ficons.speed}
+      <span className="m2">{dec(d?.max_speed, 0)}</span>
     </>
   );
 };
 
 const HorseChip = ({ name, hdata, details, mode = "all" }) => {
-  if (!modes.includes(mode)) return err_chip;
-  let tc = hdata?.details?.class;
-  let bg = get_class_color(mode == "all" ? 6 : tc);
-  let chipd = get_chip_data({ details, hdata, mode });
-  let chipjsx = get_chip_jsx(chipd);
+  if (_.isEmpty(hdata) || hdata.type == "NA") {
+    console.log(name, hdata);
+    return na_chip;
+  }
+  let bg = type_color(hdata.type);
+  if (hdata.type == "NA")
+    <div style={{ background: bg }} className="racing-tag-c row-flex">
+      NO Data
+    </div>;
+  let chipjsx = get_chip_jsx(hdata.data);
   return (
     <div style={{ background: bg }} className="racing-tag-c row-flex">
       {chipjsx}
@@ -61,9 +72,10 @@ const HorseChip = ({ name, hdata, details, mode = "all" }) => {
 };
 
 const RaceHorseRow = ({ name, details }) => {
+  let { c, f, t } = details;
   let { status, data: hdata } = useQuery(
-    ["hdata", name],
-    () => fetch(sn_hapi(name)).then((r) => r.json()),
+    ["hdata", name, c, f, t],
+    () => fetch(sn_hapi(name, details)).then((r) => r.json()),
     { staleTime: 1e14 }
   );
   // useEffect(() => {
@@ -80,7 +92,7 @@ const RaceHorseRow = ({ name, details }) => {
         )}
         {status == "success" && (
           <>
-            <HorseChip {...{ name, details, hdata, mode: "all" }} />
+            <HorseChip {...{ name, details, hdata }} />
             {/* <HorseChip {...{ name, details, hdata, mode: "cdt" }} /> */}
           </>
         )}
@@ -96,7 +108,9 @@ export const RaceHorseRowScript = ({ open_card, racehorse_el, details }) => {
   name.style.display = "none";
   name = name.innerText;
   racehorse_el.classList.add("racehorse-row-c");
-  let racehorse_ext = racehorse_el.querySelector("div.racehorse > div.race_horse_ext")
+  let racehorse_ext = racehorse_el.querySelector(
+    "div.racehorse > div.race_horse_ext"
+  );
   if (!racehorse_ext) {
     racehorse_ext = document.createElement("div");
     racehorse_ext.classList.add("race_horse_ext");

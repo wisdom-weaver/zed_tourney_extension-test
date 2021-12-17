@@ -5,6 +5,7 @@ import {
   faFire,
   faFlag,
   faFlagCheckered,
+  faTachometerAlt,
   faTint,
   faTrophy,
 } from "@fortawesome/free-solid-svg-icons";
@@ -38,6 +39,11 @@ const flag = (
     <FontAwesomeIcon color={get_color("yellow")} icon={faFlagCheckered} />
   </span>
 );
+const speed = (
+  <span style={{ padding }}>
+    <FontAwesomeIcon color={get_color("yellow")} icon={faTachometerAlt} />
+  </span>
+);
 
 const ficons = {
   flame,
@@ -45,5 +51,6 @@ const ficons = {
   horse,
   trophy,
   flag,
+  speed,
 };
 export default ficons;
